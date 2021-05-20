@@ -444,11 +444,11 @@ export class UtilService {
     };
   }
 
-  formatDate(date: IMyDate, dateFormat: string, monthLabels: IMyMonthLabels): string {
+  formatDate(date: IMyDate, dateFormat: string, monthLabels: IMyMonthLabels, secondMonthLabels: IMyMonthLabels = null): string {
     let formatted: string = dateFormat.replace(YYYY, String(date.year));
 
     if (dateFormat.indexOf(MMM) !== -1) {
-      formatted = formatted.replace(MMM, monthLabels[date.month]);
+      formatted = secondMonthLabels ? formatted.replace(MMM, secondMonthLabels[date.month]) : formatted.replace(MMM, monthLabels[date.month]);
     }
     else if (dateFormat.indexOf(MM) !== -1) {
       formatted = formatted.replace(MM, this.preZero(date.month));

@@ -249,7 +249,7 @@ export class AngularMyDatePickerDirective implements OnChanges, OnDestroy, Contr
     }
 
     let validateOpts: IMyValidateOptions = null;
-    const {dateFormat, monthLabels, dateRangeDatesDelimiter, inline} = this.opts;
+    const {dateFormat, monthLabels, dateRangeDatesDelimiter, inline, secondMonthLabels} = this.opts;
 
     if (!value) {
       this.setHostValue(EMPTY_STR);
@@ -266,7 +266,7 @@ export class AngularMyDatePickerDirective implements OnChanges, OnDestroy, Contr
         date = this.utilService.jsDateToMyDate(jsDate);
       }
       
-      const formatted: string = this.utilService.formatDate(date, dateFormat, monthLabels);
+      const formatted: string = this.utilService.formatDate(date, dateFormat, monthLabels, secondMonthLabels);
 
       validateOpts = {validateDisabledDates: false, selectedValue: this.utilService.getSelectedValue(this.selectedValue, false)};
       const valid: boolean = this.utilService.isInitializedDate(this.utilService.isDateValid(formatted, this.opts, validateOpts));
