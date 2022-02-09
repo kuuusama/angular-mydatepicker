@@ -29,7 +29,7 @@ export class DatePickerDivHostElement implements OnInit {
   resetTomorrowDate(): void {
     let d: Date = new Date();
     d.setDate(d.getDate() + 1);
-    this.model = {isRange: false, singleDate: {date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}}, dateRange: null};
+    this.model = {isRange: false, singleDate: {date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()}}, dateRange: null};
   }
 
   onDateChanged(event: IMyDateModel): void {

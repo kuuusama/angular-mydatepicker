@@ -1,0 +1,17 @@
+<div class="timeview">
+  
+  <div class="hours">
+    <button class="button up" (click)="hoursUp()"><div class="b_icon"></div></button>
+    <div class="display"> {{ mHours | number:'2.0' }} </div>
+    <button class="button down" (click)="hoursDown()"><div class="b_icon down"></div></button>
+  </div>
+
+  <div class="semicolon">:</div>
+
+  <div class="hours">
+    <button class="button up" (click)="minsUp()"><div class="b_icon"></div></button>
+    <div class="display"> {{ mMins | number:'2.0' }} </div>
+    <button class="button down" (click)="minsDown()"><div class="b_icon down"></div></button>
+  </div>
+
+</div>

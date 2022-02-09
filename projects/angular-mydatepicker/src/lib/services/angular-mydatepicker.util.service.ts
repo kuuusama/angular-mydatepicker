@@ -13,14 +13,15 @@ import {IMyValidateOptions} from "../interfaces/my-validate-options.interface";
 import {IMyOptions} from "../interfaces/my-options.interface";
 import {KeyCode} from "../enums/key-code.enum";
 import {KeyName} from "../enums/key-name.enum";
-import {D, DD, M, MM, MMM, YYYY, SU, MO, TU, WE, TH, FR, SA, ZERO_STR, EMPTY_STR, PIPE} from "../constants/constants";
+import {D, DD, M, MM, MMM, YYYY, SU, MO, TU, WE, TH, FR, SA, ZERO_STR, EMPTY_STR, PIPE, HH, SS} from "../constants/constants";
+import { leave } from "@angular/core/src/profile/wtf_impl";
 
 @Injectable()
 export class UtilService {
   weekDays: Array<string> = [SU, MO, TU, WE, TH, FR, SA];
 
   isDateValid(dateStr: string, options: IMyOptions, validateOpts: IMyValidateOptions): IMyDate {
-    const {dateFormat, minYear, maxYear, monthLabels} = options;
+    const {dateFormat, minYear, maxYear, monthLabels, secondMonthLabels} = options;
 
     const returnDate: IMyDate = this.resetDate();
     const datesInMonth: Array<number> = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -36,6 +37,8 @@ export class UtilService {
     let year: number = 0;
     let month: number = 0;
     let day: number = 0;
+    let hour: number = 0;
+    let min: number = 0;
 
     for(const dv of dateValues) {
       const {value, format} = dv;
@@ -48,10 +51,18 @@ export class UtilService {
         year = this.getNumberByValue(dv);
       }
       else if (format.indexOf(M) !== -1) {
-        month = isMonthStr ? this.getMonthNumberByMonthName(dv, monthLabels) : this.getNumberByValue(dv);
+        month = isMonthStr ? this.getMonthNumberByMonthName(dv, monthLabels, secondMonthLabels) : this.getNumberByValue(dv);
       }
       else if (format.indexOf(D) !== -1) {
         day = this.getNumberByValue(dv);
+      }
+
+      else if (format.indexOf(HH) !== -1) {
+        hour = this.getNumberByValue(dv);
+      }
+
+      else if (format.indexOf(SS) !== -1) {
+        min = this.getNumberByValue(dv);
       }
     }
 
@@ -74,12 +85,20 @@ export class UtilService {
       day = today.day;
     }
 
+    if (hour === 0) {
+      hour = today.hour;
+    }
+
+    if (min === 0) {
+      min = today.min;
+    }
+
     if (month !== -1 && day !== -1 && year !== -1) {
       if (year < minYear || year > maxYear || month < 1 || month > 12) {
         return returnDate;
       }
 
-      const date: IMyDate = {year, month, day};
+      const date: IMyDate = {year, month, day, hour, min};
 
       if (validateDisabledDates && this.isDisabledDate(date, options).disabled) {
         return returnDate;
@@ -159,10 +178,10 @@ export class UtilService {
     return da;
   }
 
-  getMonthNumberByMonthName(df: IMyDateFormat, monthLabels: IMyMonthLabels): number {
+  getMonthNumberByMonthName(df: IMyDateFormat, monthLabels: IMyMonthLabels, secondMonthLabels: IMyMonthLabels): number {
     if (df.value) {
       for (let key = 1; key <= 12; key++) {
-        if (df.value.toLowerCase() === monthLabels[key].toLowerCase()) {
+        if (df.value.toLowerCase() === monthLabels[key].toLowerCase() || df.value.toLowerCase() === secondMonthLabels[key].toLowerCase()) {
           return key;
         }
       }
@@ -271,8 +290,8 @@ export class UtilService {
   isDisabledMonth(year: number, month: number, options: IMyOptions): boolean {
     const {disableUntil, disableSince, disableDateRanges, enableDates} = options;
 
-    const dateEnd: IMyDate = {year, month, day: this.datesInMonth(month, year)};
-    const dateBegin: IMyDate = {year, month, day: 1};
+    const dateEnd: IMyDate = {year, month, day: this.datesInMonth(month, year), hour: 23, min: 59};
+    const dateBegin: IMyDate = {year, month, day: 1, hour: 0, min: 0};
 
     if (this.isDatesEnabled(dateBegin, dateEnd, enableDates)) {
       return false;
@@ -296,8 +315,8 @@ export class UtilService {
   isDisabledYear(year: number, options: IMyOptions): boolean {
     const {disableUntil, disableSince, disableDateRanges, enableDates, minYear, maxYear} = options;
 
-    const dateEnd: IMyDate = {year, month: 12, day: 31};
-    const dateBegin: IMyDate = {year, month: 1, day: 1};
+    const dateEnd: IMyDate = {year, month: 12, day: 31, hour: 23, min: 59};
+    const dateBegin: IMyDate = {year, month: 1, day: 1, hour: 0, min: 0};
 
     if (this.isDatesEnabled(dateBegin, dateEnd, enableDates)) {
       return false;
@@ -413,7 +432,7 @@ export class UtilService {
     return Math.round(((d.getTime() - new Date(d.getFullYear(), 0, 4).getTime()) / 86400000) / 7) + 1;
   }
 
-  getDateModel(date: IMyDate, dateRange: IMyDateRange, dateFormat: string, monthLabels: IMyMonthLabels, rangeDelimiter: string, dateStr: string = EMPTY_STR): IMyDateModel {
+  getDateModel(date: IMyDate, dateRange: IMyDateRange, dateFormat: string, monthLabels: IMyMonthLabels, secondMonthLabels: IMyMonthLabels, rangeDelimiter: string, dateStr: string = EMPTY_STR): IMyDateModel {
     let singleDateModel: IMySingleDateModel = null;
     let dateRangeModel: IMyDateRangeModel = null;
 
@@ -421,7 +440,7 @@ export class UtilService {
       singleDateModel = {
         date,
         jsDate: this.myDateToJsDate(date),
-        formatted: dateStr.length ? dateStr : this.formatDate(date, dateFormat, monthLabels),
+        formatted: dateStr.length ? dateStr : this.formatDate(date, dateFormat, monthLabels, secondMonthLabels),
         epoc: this.getEpocTime(date)
       };
     }
@@ -433,7 +452,7 @@ export class UtilService {
         endDate: dateRange.end,
         endJsDate: this.myDateToJsDate(dateRange.end),
         endEpoc: this.getEpocTime(dateRange.end),
-        formatted: this.formatDate(dateRange.begin, dateFormat, monthLabels) + rangeDelimiter + this.formatDate(dateRange.end, dateFormat, monthLabels)
+        formatted: this.formatDate(dateRange.begin, dateFormat, monthLabels, secondMonthLabels) + rangeDelimiter + this.formatDate(dateRange.end, dateFormat, monthLabels, secondMonthLabels)
       };
     }
 
@@ -444,7 +463,7 @@ export class UtilService {
     };
   }
 
-  formatDate(date: IMyDate, dateFormat: string, monthLabels: IMyMonthLabels, secondMonthLabels: IMyMonthLabels = null): string {
+  formatDate(date: IMyDate, dateFormat: string, monthLabels: IMyMonthLabels, secondMonthLabels: IMyMonthLabels): string {
     let formatted: string = dateFormat.replace(YYYY, String(date.year));
 
     if (dateFormat.indexOf(MMM) !== -1) {
@@ -513,7 +532,7 @@ export class UtilService {
   }
 
   resetDate(): IMyDate {
-    return {year: 0, month: 0, day: 0};
+    return {year: 0, month: 0, day: 0, hour: 0, min: 0};
   }
 
   getTimeInMilliseconds(date: IMyDate): number {
@@ -522,7 +541,7 @@ export class UtilService {
 
   getToday(): IMyDate {
     const date: Date = new Date();
-    return {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
+    return {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), hour: date.getHours(), min: date.getMinutes()};
   }
 
   getDayNumber(date: IMyDate): number {
@@ -538,12 +557,12 @@ export class UtilService {
   }
 
   jsDateToMyDate(date: Date): IMyDate {
-    return {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()};
+    return {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() , hour: date.getHours(), min: date.getMinutes()};
   }
 
   myDateToJsDate(date: IMyDate): Date {
-    const {year, month, day} = date;
-    return new Date(year, month - 1, day, 0, 0, 0, 0);
+    const {year, month, day, hour, min} = date;
+    return new Date(year, month - 1, day, hour, min, 0, 0);
   }
 
   datesInMonth(m: number, y: number): number {
@@ -556,8 +575,8 @@ export class UtilService {
     return this.datesInMonth(d.getMonth() + 1, d.getFullYear());
   }
 
-  getJsDate(year: number, month: number, day: number): Date {
-    return new Date(year, month - 1, day, 0, 0, 0, 0);
+  getJsDate(year: number, month: number, day: number, hour?: number, min?: number): Date {
+    return new Date(year, month - 1, day, hour ? hour : 0, min ? min : 0, 0, 0);
   }
 
   getSelectedValue(selectedValue: any, dateRange: boolean): any {

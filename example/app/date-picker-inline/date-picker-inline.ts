@@ -43,7 +43,7 @@ export class DatePickerInline implements OnInit {
     let copy = this.getCopyOfOptions();
     let d: Date = new Date();
     d.setDate(d.getDate() - 1);
-    copy.disableUntil = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    copy.disableUntil = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()};
     this.myDatePickerOptions = copy;
   }
 
@@ -53,7 +53,7 @@ export class DatePickerInline implements OnInit {
     this.model = {
       isRange: false, 
       singleDate: {
-        date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}
+        date: {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()}
       }, 
       dateRange: null};
   }
@@ -64,8 +64,8 @@ export class DatePickerInline implements OnInit {
     date.setDate(date.getDate() + 3);
 
     this.model = {isRange: true, singleDate: null, dateRange: {
-      beginDate: {year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate()},
-      endDate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()}
+      beginDate: {year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate(), hour: today.getHours(), min: today.getMinutes()},
+      endDate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), hour: today.getHours(), min: today.getMinutes()}
     }}; 
   }
 
@@ -77,8 +77,8 @@ export class DatePickerInline implements OnInit {
     date.setDate(date.getDate() + 2);
     
     this.model = {isRange: true, singleDate: null, dateRange: {
-      beginDate: {year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate()},
-      endDate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()}
+      beginDate: {year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate(), hour: today.getHours(), min: today.getMinutes()},
+      endDate: {year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), hour: today.getHours(), min: today.getMinutes()}
     }}; 
   }
 

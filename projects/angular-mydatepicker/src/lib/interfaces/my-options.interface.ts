@@ -63,6 +63,8 @@ export interface IMyOptions {
   divHostElement?: IMyDivHostElement;
   ariaLabelPrevMonth?: string;
   ariaLabelNextMonth?: string;
+  showResetButton?: boolean;
+  resetButtonText?: string;
 }
 
 export interface IAngularMyDpOptions extends IMyOptions { }

@@ -36,6 +36,40 @@
   z-index: 100000;
 }
 
+.myDpSelector > .mode_selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.myDpSelector > .mode_selector > .button {
+  border: none;
+  outline: none;
+  border: 1px solid #D7D7D7;
+  box-sizing: border-box;
+  border-radius: 5px;
+  width: 129px;
+  height: 40px;
+  text-align: center;
+  background: white;
+}
+
+.myDpSelector > .mode_selector > .button.date {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.myDpSelector > .mode_selector > .button.time {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  margin-left: -1px;
+}
+
+.myDpSelector > .mode_selector > .button.active {
+  border: 2px solid #1B8FCA;
+}
+
 .myDpViewChangeAnimation {
   animation: myDpViewChangeAnimation 0.2s linear;
 }
@@ -287,11 +321,11 @@
 }
 
 .myDpFooter {
-  height: calc(100% - 60px);
+  height: calc(100% - 118px);
 }
 
 .myDpNoFooter {
-  height: calc(100% - 30px);
+  height: calc(100% - 88px);
 }
 
 .myDpCalTable,

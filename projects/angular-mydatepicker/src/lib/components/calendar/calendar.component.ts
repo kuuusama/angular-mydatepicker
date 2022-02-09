@@ -40,8 +40,8 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
   opts: IMyOptions;
   visibleMonth: IMyMonth = {monthTxt: EMPTY_STR, monthNbr: 0, year: 0};
   selectedMonth: IMyMonth = {monthNbr: 0, year: 0};
-  selectedDate: IMyDate = {year: 0, month: 0, day: 0};
-  selectedDateRange: IMyDateRange = {begin: {year: 0, month: 0, day: 0}, end: {year: 0, month: 0, day: 0}};
+  selectedDate: IMyDate = {year: 0, month: 0, day: 0, hour: 0, min: 0};
+  selectedDateRange: IMyDateRange = {begin: {year: 0, month: 0, day: 0, hour: 0, min: 0}, end: {year: 0, month: 0, day: 0, hour: 0, min: 0}};
   weekDays: Array<string> = [];
   dates: Array<IMyWeek> = [];
   months: Array<Array<IMyCalendarMonth>> = [];
@@ -65,6 +65,8 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
 
   prevViewDisabled: boolean = false;
   nextViewDisabled: boolean = false;
+
+  mCurrentMode: number = 0;
 
   clickListener: () => void;
 
@@ -128,8 +130,11 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
   initializeView(defaultMonth: IMyDefaultMonth, selectedValue: any, inputValue: string): void {
     const {dateRange} = this.opts;
 
+    console.log(`Input value: ${inputValue}`);
+
     // use today as a selected month
     const today: IMyDate = this.utilService.getToday();
+    console.log("Today is: "); console.log(today);
     this.selectedMonth = {monthNbr: today.month, year: today.year};
 
     // If default month attribute valur given use it as a selected month
@@ -571,7 +576,7 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
   }
 
   selectDate(date: IMyDate): void {
-    const {dateRange, dateFormat, monthLabels, dateRangeDatesDelimiter, closeSelectorOnDateSelect} = this.opts;
+    const {dateRange, dateFormat, monthLabels, secondMonthLabels, dateRangeDatesDelimiter, closeSelectorOnDateSelect} = this.opts;
 
     if (dateRange) {
       // Date range
@@ -586,7 +591,7 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
           date,
           jsDate: this.utilService.myDateToJsDate(date),
           dateFormat: dateFormat,
-          formatted: this.utilService.formatDate(date, dateFormat, monthLabels),
+          formatted: this.utilService.formatDate(date, dateFormat, monthLabels, secondMonthLabels),
           epoc: this.utilService.getEpocTime(date)
         });
       }
@@ -598,7 +603,7 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
           date,
           jsDate: this.utilService.myDateToJsDate(date),
           dateFormat: dateFormat,
-          formatted: this.utilService.formatDate(date, dateFormat, monthLabels),
+          formatted: this.utilService.formatDate(date, dateFormat, monthLabels, secondMonthLabels),
           epoc: this.utilService.getEpocTime(date)
         });
 
@@ -613,7 +618,7 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
             date,
             jsDate: this.utilService.myDateToJsDate(date),
             dateFormat: dateFormat,
-            formatted: this.utilService.formatDate(date, dateFormat, monthLabels),
+            formatted: this.utilService.formatDate(date, dateFormat, monthLabels, secondMonthLabels),
             epoc: this.utilService.getEpocTime(date)
           });
         }
@@ -624,18 +629,18 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
             date,
             jsDate: this.utilService.myDateToJsDate(date),
             dateFormat: dateFormat,
-            formatted: this.utilService.formatDate(date, dateFormat, monthLabels),
+            formatted: this.utilService.formatDate(date, dateFormat, monthLabels, secondMonthLabels),
             epoc: this.utilService.getEpocTime(date)
           });
 
-          this.dateChanged(this.utilService.getDateModel(null, this.selectedDateRange, dateFormat, monthLabels, dateRangeDatesDelimiter), closeSelectorOnDateSelect);
+          this.dateChanged(this.utilService.getDateModel(null, this.selectedDateRange, dateFormat, monthLabels, secondMonthLabels, dateRangeDatesDelimiter), closeSelectorOnDateSelect);
         }
       }
     }
     else {
       // Single date
       this.selectedDate = date;
-      this.dateChanged(this.utilService.getDateModel(this.selectedDate, null, dateFormat, monthLabels, dateRangeDatesDelimiter), closeSelectorOnDateSelect);
+      this.dateChanged(this.utilService.getDateModel(this.selectedDate, null, dateFormat, monthLabels, secondMonthLabels, dateRangeDatesDelimiter), closeSelectorOnDateSelect);
     }
   }
 
@@ -690,7 +695,7 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
         const pm = dInPrevM - monthStart + 1;
         // Previous month
         for (let j = pm; j <= dInPrevM; j++) {
-          const date: IMyDate = {year: m === 1 ? y - 1 : y, month: m === 1 ? 12 : m - 1, day: j};
+          const date: IMyDate = {year: m === 1 ? y - 1 : y, month: m === 1 ? 12 : m - 1, day: j, hour: 0, min: 0};
           week.push({
             dateObj: date,
             cmo,
@@ -707,7 +712,7 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
         // Current month
         const daysLeft: number = 7 - week.length;
         for (let j = 0; j < daysLeft; j++) {
-          const date: IMyDate = {year: y, month: m, day: dayNbr};
+          const date: IMyDate = {year: y, month: m, day: dayNbr, hour: 0, min: 0};
           week.push({
             dateObj: date,
             cmo,
@@ -730,7 +735,7 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
             cmo = MonthId.next;
             month = m + 1;
           }
-          const date: IMyDate = {year: cmo === MonthId.next && m === 12 ? y + 1 : y, month: cmo === MonthId.curr ? m : cmo === MonthId.next && m < 12 ? m + 1 : 1, day: dayNbr};
+          const date: IMyDate = {year: cmo === MonthId.next && m === 12 ? y + 1 : y, month: cmo === MonthId.curr ? m : cmo === MonthId.next && m < 12 ? m + 1 : 1, day: dayNbr, hour: 0, min: 0};
           week.push({
             dateObj: date,
             cmo,
@@ -752,7 +757,10 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
 
     if (notifyChange) {
       // Notify parent
-      this.calendarViewChanged({year: y, month: m, first: {number: 1, weekday: this.getWeekday({year: y, month: m, day: 1})}, last: {number: dInThisM, weekday: this.getWeekday({year: y, month: m, day: dInThisM})}});
+      this.calendarViewChanged(
+        {year: y, month: m, 
+          first: {number: 1, weekday: this.getWeekday({year: y, month: m, day: 1, hour: 0, min: 0})}, 
+          last: {number: dInThisM, weekday: this.getWeekday({year: y, month: m, day: dInThisM, hour: 0, min: 0})}});
     }
   }
 
@@ -763,8 +771,8 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
     const {disableHeaderButtons, disableUntil, disableSince, enableDates, minYear, maxYear, rtl} = this.opts;
 
     if (disableHeaderButtons) {
-      const duDate: IMyDate = {year: m === 1 ? y - 1 : y, month: m === 1 ? 12 : m - 1, day: this.utilService.datesInMonth(m === 1 ? 12 : m - 1, m === 1 ? y - 1 : y)};
-      const dsDate: IMyDate = {year: m === 12 ? y + 1 : y, month: m === 12 ? 1 : m + 1, day: 1};
+      const duDate: IMyDate = {year: m === 1 ? y - 1 : y, month: m === 1 ? 12 : m - 1, day: this.utilService.datesInMonth(m === 1 ? 12 : m - 1, m === 1 ? y - 1 : y), hour: 23, min: 59};
+      const dsDate: IMyDate = {year: m === 12 ? y + 1 : y, month: m === 12 ? 1 : m + 1, day: 1, hour: 0, min: 0};
       
       dpm = this.utilService.isDisabledByDisableUntil(duDate, disableUntil) 
         && !this.utilService.isPastDatesEnabled(duDate, enableDates);
@@ -787,8 +795,8 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
     const {disableHeaderButtons, disableUntil, disableSince, enableDates, minYear, maxYear, rtl} = this.opts;
 
     if (disableHeaderButtons) {
-      const duDate: IMyDate = {year: y - 1, month: 12, day: 31};
-      const dsDate: IMyDate = {year: y + 1, month: 1, day: 1};
+      const duDate: IMyDate = {year: y - 1, month: 12, day: 31, hour: 23, min: 59};
+      const dsDate: IMyDate = {year: y + 1, month: 1, day: 1, hour: 0, min: 0};
 
       dpm = this.utilService.isDisabledByDisableUntil(duDate, disableUntil)
         && !this.utilService.isPastDatesEnabled(duDate, enableDates);
@@ -811,8 +819,8 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
     const {disableHeaderButtons, disableUntil, disableSince, enableDates, minYear, maxYear, rtl} = this.opts;
 
     if (disableHeaderButtons) {
-      const duDate: IMyDate = {year: yp - 1, month: 12, day: 31};
-      const dsDate: IMyDate = {year: yn + 1, month: 1, day: 1};
+      const duDate: IMyDate = {year: yp - 1, month: 12, day: 31, hour: 23, min: 59};
+      const dsDate: IMyDate = {year: yn + 1, month: 1, day: 1, hour: 0, min: 0};
 
       dpy = this.utilService.isDisabledByDisableUntil(duDate, disableUntil)
         && !this.utilService.isPastDatesEnabled(duDate, enableDates);
@@ -830,4 +838,40 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
   swapHeaderBtnDisabled(): void {
     [this.prevViewDisabled, this.nextViewDisabled] = [this.nextViewDisabled, this.prevViewDisabled];
   }
+
+  onDateResetBtnClicked() {
+    const {closeSelectorOnDateSelect} = this.opts;
+    this.resetDateValue();
+    this.dateChanged(
+      {
+        isRange: this.opts.dateRange,
+        singleDate: {
+          date: this.utilService.resetDate(),
+          jsDate: null,
+          formatted: EMPTY_STR,
+          epoc: 0
+        },
+        dateRange: {
+          beginDate: this.utilService.resetDate(),
+          beginJsDate: null,
+          beginEpoc: 0,
+          endDate: this.utilService.resetDate(),
+          endJsDate: null,
+          endEpoc: 0,
+          formatted: EMPTY_STR
+        }
+      }
+      , closeSelectorOnDateSelect
+    );
+
+  }
+
+  onTimeChanged($event) {
+    if (!this.opts.dateRange) {
+      this.selectedDate.hour = $event.hours;
+      this.selectedDate.min = $event.min;
+      this.dateChanged(this.utilService.getDateModel(this.selectedDate, null, this.opts.dateFormat, this.opts.monthLabels, this.opts.secondMonthLabels, this.opts.dateRangeDatesDelimiter), false);
+    }
+  }
+  
 }

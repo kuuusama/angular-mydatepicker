@@ -27,11 +27,11 @@ export class DatePickerNgmodel implements OnInit {
     disableHeaderButtons: true,
     showWeekNumbers: false,
     disableDateRanges: [
-      {begin: {year: 2016, month: 10, day: 5}, end: {year: 2016, month: 10, day: 7}},
-      {begin: {year: 2016, month: 10, day: 10}, end: {year: 2016, month: 10, day: 12}}
+      {begin: {year: 2016, month: 10, day: 5, hour: 0, min: 0}, end: {year: 2016, month: 10, day: 7, hour: 23, min: 59}},
+      {begin: {year: 2016, month: 10, day: 10, hour: 0, min: 0}, end: {year: 2016, month: 10, day: 12, hour: 23, min: 59}}
     ],
-    disableUntil: {year: 0, month: 0, day: 0},
-    disableSince: {year: 0, month: 0, day: 0},
+    disableUntil: {year: 0, month: 0, day: 0, hour: 23, min: 59},
+    disableSince: {year: 0, month: 0, day: 0, hour: 0, min: 0},
     disableWeekdays: [],
     markDates: [],
     markWeekends: <IMyMarkedDate>{},
@@ -188,7 +188,7 @@ export class DatePickerNgmodel implements OnInit {
   onDisableToday(checked: boolean): void {
     let d: Date = new Date();
     let copy = this.getCopyOfOptions();
-    copy.disableDates = checked ? [{year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}] : [];
+    copy.disableDates = checked ? [{year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()}] : [];
     this.myDatePickerOptions = copy;
   }
 
@@ -196,7 +196,7 @@ export class DatePickerNgmodel implements OnInit {
     let d: Date = new Date();
     let copy = this.getCopyOfOptions();
     copy.markDates = checked ? [{
-      dates: [{year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()}],
+      dates: [{year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()}],
       color: '#C30000'
     }] : [];
     this.myDatePickerOptions = copy;
@@ -224,12 +224,12 @@ export class DatePickerNgmodel implements OnInit {
     let d: Date = new Date();
     let copy = this.getCopyOfOptions();
     let dates: Array<IMyDate> = [];
-    dates.push({year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()});
+    dates.push({year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()});
 
     d.setDate(d.getDate() + 1);
-    dates.push({year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()});
+    dates.push({year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()});
 
-    dates.push({year: 2017, month: 6, day: 1});
+    dates.push({year: 2017, month: 6, day: 1, hour: d.getHours(), min: d.getMinutes()});
 
     copy.highlightDates = checked ? dates : [];
     this.myDatePickerOptions = copy;
@@ -286,7 +286,7 @@ export class DatePickerNgmodel implements OnInit {
   onDisable24Day(checked: boolean): void {
     let d: Date = new Date();
     let copy = this.getCopyOfOptions();
-    copy.disableDates = checked ? [{year: 0, month: 0, day: 24}] : [];
+    copy.disableDates = checked ? [{year: 0, month: 0, day: 24, hour: d.getHours(), min: d.getMinutes()}] : [];
     this.myDatePickerOptions = copy;
   }
 
@@ -300,7 +300,7 @@ export class DatePickerNgmodel implements OnInit {
     let copy = this.getCopyOfOptions();
     let d: Date = new Date();
     d.setDate(d.getDate() - 1);
-    copy.disableUntil = checked ? {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()} : {year: 0, month: 0, day: 0};
+    copy.disableUntil = checked ? {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()} : {year: 0, month: 0, day: 0, hour: d.getHours(), min: d.getMinutes()};
     this.myDatePickerOptions = copy;
   }
 
@@ -308,7 +308,7 @@ export class DatePickerNgmodel implements OnInit {
     let copy = this.getCopyOfOptions();
     let d: Date = new Date();
     d.setDate(d.getDate() + 1);
-    copy.disableSince = checked ? {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()} : {year: 0, month: 0, day: 0};
+    copy.disableSince = checked ? {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()} : {year: 0, month: 0, day: 0, hour: d.getHours(), min: d.getMinutes()};
     this.myDatePickerOptions = copy;
   }
 
@@ -329,13 +329,13 @@ export class DatePickerNgmodel implements OnInit {
 
     let d: Date = new Date();
     d.setDate(d.getDate() - 1);
-    let yesterday: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    let yesterday: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()};
 
     d.setDate(d.getDate() + 1);
-    let today: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    let today: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()};
     
     d.setDate(d.getDate() + 1);
-    let tomorrow: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    let tomorrow: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()};
 
     copy.disableDates = checked ? [{dates: [yesterday, today, tomorrow], styleClass: 'disabledDates'}] : [];
     copy.stylesData = 
@@ -352,13 +352,13 @@ export class DatePickerNgmodel implements OnInit {
 
     let d: Date = new Date();
     d.setDate(d.getDate() + 2);
-    let yesterday: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    let yesterday: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()};
 
     d.setDate(d.getDate() + 1);
-    let today: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    let today: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()};
     
     d.setDate(d.getDate() + 1);
-    let tomorrow: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    let tomorrow: IMyDate = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), hour: d.getHours(), min: d.getMinutes()};
 
     copy.markDates = checked ? [
       {dates: [yesterday], styleClass: 'pilatesDates'}, 

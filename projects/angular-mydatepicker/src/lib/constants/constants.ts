@@ -8,6 +8,8 @@ const MM = "mm";
 const MMM = "mmm";
 const Y = "y";
 const YYYY = "yyyy";
+const HH = "hh";
+const SS = "ss"
 
 const DATE_ROW_COUNT = 5;
 const DATE_COL_COUNT = 6;
@@ -81,6 +83,8 @@ export {
   M,
   MM,
   MMM,
+  HH,
+  SS,
   Y,
   YYYY,
   DATE_ROW_COUNT,

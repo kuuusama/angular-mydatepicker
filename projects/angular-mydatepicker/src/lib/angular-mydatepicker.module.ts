@@ -11,6 +11,7 @@ import {FooterBarComponent} from "./components/footer-bar/footer-bar.component";
 
 import {AngularMyDatePickerDirective} from "./angular-mydatepicker.input";
 import {AngularMyDatePickerCalendarDirective} from "./directives/angular-mydatepicker-calendar.directive";
+import { TimeViewComponent } from './components/time-view/time-view.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule],
@@ -22,7 +23,8 @@ import {AngularMyDatePickerCalendarDirective} from "./directives/angular-mydatep
     YearViewComponent,
     FooterBarComponent,
     AngularMyDatePickerDirective,
-    AngularMyDatePickerCalendarDirective
+    AngularMyDatePickerCalendarDirective,
+    TimeViewComponent
   ],
   entryComponents: [CalendarComponent],
   exports: [

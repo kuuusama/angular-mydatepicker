@@ -1,3 +1,4 @@
 <div class="myDpFooterBar">
-    <button type="button" class="myDpHeaderBtn myDpFooterBtn" (click)="onFooterBarTxtClicked()">{{footerBarTxt}}</button>
+    <button *ngIf="!showResetButton" type="button" class="myDpHeaderBtn myDpFooterBtn" (click)="onFooterBarTxtClicked()">{{footerBarTxt}}</button>
+    <button *ngIf="showResetButton" type="button" class="myDpHeaderBtn myDpFooterBtn" (click)="onResetBtnClicked()">{{resetBtnTxt}}</button>
 </div>

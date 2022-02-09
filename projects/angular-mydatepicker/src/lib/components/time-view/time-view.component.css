@@ -1,0 +1,69 @@
+.timeview {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.timeview > .semicolon {
+    font-family: 'Fira Sans';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 41px;
+    color: #17171C;
+    margin-left: 38px;
+    margin-right: 38px;
+}
+
+.timeview > .hours {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.timeview > .hours > .button {
+    width: 8px;
+    height: 4px;
+    border: none;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.timeview > .hours > .button > .b_icon {
+    width: 5.6px;
+    height: 5.6px;
+    border-top: 1.5px solid #17171C;
+    border-left: 1.5px solid #17171C;
+    transform: rotate(45deg);
+}
+
+.timeview > .hours > .button > .b_icon.down{
+    transform: rotate(225deg);
+}
+
+.timeview > .hours > .button > .b_icon:hover {
+    border-top: 1.5px solid #1890CC;
+    border-left: 1.5px solid #1890CC;
+}
+
+.timeview > .hours > .button.down {
+    margin-top: 23px;
+}
+.timeview > .hours > .button.up {
+    margin-bottom: 23px;
+}
+.timeview > .hours > .display {
+    font-family: 'Fira Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 41px;
+    display: flex;
+    align-items: flex-end;
+    color: #17171C;
+}  
+

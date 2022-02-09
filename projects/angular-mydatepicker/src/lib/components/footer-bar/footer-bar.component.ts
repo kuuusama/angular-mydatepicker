@@ -12,8 +12,11 @@ import {OPTS, SPACE_STR, EMPTY_STR} from "../../constants/constants";
 export class FooterBarComponent implements OnChanges {
   @Input() opts: IMyOptions;
   @Output() footerBarTxtClicked: EventEmitter<void> = new EventEmitter<void>();
+  @Output() dateResetBtnClicked: EventEmitter<void> = new EventEmitter<void>();
 
   footerBarTxt: string = EMPTY_STR;
+  resetBtnTxt:  string = EMPTY_STR;
+  showResetButton: boolean = false;
 
   constructor(private utilService: UtilService) { }
 
@@ -21,15 +24,22 @@ export class FooterBarComponent implements OnChanges {
     if (changes.hasOwnProperty(OPTS)) {
       this.opts = changes[OPTS].currentValue;
 
-      const {dateFormat, monthLabels, todayTxt} = this.opts;
+      const {dateFormat, monthLabels, secondMonthLabels, todayTxt, showResetButton, resetButtonText} = this.opts;
 
       const today = this.utilService.getToday();
+      this.showResetButton = showResetButton;
+      this.resetBtnTxt = resetButtonText;
       this.footerBarTxt = todayTxt + (todayTxt.length > 0 ? SPACE_STR : EMPTY_STR) + 
-        this.utilService.formatDate(today, dateFormat, monthLabels);
+        this.utilService.formatDate(today, dateFormat, monthLabels, secondMonthLabels);
     }
   }
 
   onFooterBarTxtClicked(): void {
     this.footerBarTxtClicked.emit()
   }
+
+  onResetBtnClicked(): void {
+    this.dateResetBtnClicked.emit()
+  }
+
 }
