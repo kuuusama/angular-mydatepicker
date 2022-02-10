@@ -11,7 +11,8 @@ export class DatePickerInline implements OnInit {
   public myDatePickerOptions: IAngularMyDpOptions = {
     dateRange: false,
     inline: true,
-    dateFormat: 'dd.mm.yyyy'
+    dateFormat: 'dd.mm.yyyy',
+    showTimeSelector: true
   };
 
   public selectedTextNormal: string = '';

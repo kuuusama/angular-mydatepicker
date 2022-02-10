@@ -130,11 +130,8 @@ export class CalendarComponent implements AfterViewInit, OnDestroy {
   initializeView(defaultMonth: IMyDefaultMonth, selectedValue: any, inputValue: string): void {
     const {dateRange} = this.opts;
 
-    console.log(`Input value: ${inputValue}`);
-
     // use today as a selected month
     const today: IMyDate = this.utilService.getToday();
-    console.log("Today is: "); console.log(today);
     this.selectedMonth = {monthNbr: today.month, year: today.year};
 
     // If default month attribute valur given use it as a selected month

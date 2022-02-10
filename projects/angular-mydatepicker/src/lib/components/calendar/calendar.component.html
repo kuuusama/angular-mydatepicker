@@ -6,7 +6,7 @@
       'myDpSelectorArrowRight': opts.showSelectorArrow&&opts.alignSelectorRight, 'myDpSelectorAbsolute': !opts.inline, 'myDpSelectorPosInitial': opts.inline}" 
     (keyup)="onCloseSelector($event)" tabindex="0">
 
-    <div class="mode_selector">
+    <div class="mode_selector" *ngIf="opts.showTimeSelector">
       <button class="button date" [ngClass]="{'active': 0 == mCurrentMode }" (click)="mCurrentMode = 0">Дата</button>
       <button class="button time" [ngClass]="{'active': 1 == mCurrentMode }" (click)="mCurrentMode = 1">Время</button>
     </div>

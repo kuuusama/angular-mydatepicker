@@ -10,7 +10,7 @@ import {IAngularMyDpOptions, IMyDateModel, AngularMyDatePickerDirective} from '.
 export class DatePickerReactiveForms implements OnInit {
   public myDatePickerOptions: IAngularMyDpOptions = {
     dateRange: false,
-    dateFormat: 'dd.mm.yyyy'
+    dateFormat: 'dd.mm.yyyy hh:ss'
   };
 
   public disabled: boolean = false;
@@ -23,7 +23,6 @@ export class DatePickerReactiveForms implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('onInit(): SampleDatePickerReacticeForms');
     let d: Date = new Date();
     d.setDate(d.getDate() + 2);
     let model: IMyDateModel = {isRange: false, singleDate: {jsDate: d}, dateRange: null};

@@ -321,10 +321,18 @@
 }
 
 .myDpFooter {
-  height: calc(100% - 118px);
+  height: calc(100% - 60px);
 }
 
 .myDpNoFooter {
+  height: calc(100% - 30px);
+}
+
+.myDpFooter.datesel {
+  height: calc(100% - 118px);
+}
+
+.myDpNoFooter.datesel {
   height: calc(100% - 88px);
 }
 

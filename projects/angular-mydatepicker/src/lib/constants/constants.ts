@@ -19,6 +19,7 @@ const YEAR_ROW_COUNT = 4;
 const YEAR_COL_COUNT = 4;
 
 const DOT = ".";
+const SEMICOLON = ":";
 const UNDER_LINE = "_";
 const PIPE = "|";
 const YEAR_SEPARATOR = " - ";
@@ -94,6 +95,7 @@ export {
   YEAR_ROW_COUNT,
   YEAR_COL_COUNT,
   DOT,
+  SEMICOLON,
   UNDER_LINE,
   PIPE,
   YEAR_SEPARATOR,

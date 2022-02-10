@@ -14,7 +14,6 @@ import {IMyOptions} from "../interfaces/my-options.interface";
 import {KeyCode} from "../enums/key-code.enum";
 import {KeyName} from "../enums/key-name.enum";
 import {D, DD, M, MM, MMM, YYYY, SU, MO, TU, WE, TH, FR, SA, ZERO_STR, EMPTY_STR, PIPE, HH, SS} from "../constants/constants";
-import { leave } from "@angular/core/src/profile/wtf_impl";
 
 @Injectable()
 export class UtilService {
@@ -26,7 +25,7 @@ export class UtilService {
     const returnDate: IMyDate = this.resetDate();
     const datesInMonth: Array<number> = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const isMonthStr: boolean = dateFormat.indexOf(MMM) !== -1;
-    const delimeters: Array<string> = dateFormat.match(/[^(dmy)]{1,}/g);
+    const delimeters: Array<string> = dateFormat.match(/[^(dmyhs)]{1,}/g);
 
     if (!dateStr || dateStr === EMPTY_STR) {
       return returnDate;
@@ -71,6 +70,8 @@ export class UtilService {
     year = year === 0 && selectedValue ? selectedValue.year : year;
     month = month === 0 && selectedValue ? selectedValue.month : month;
     day = day === 0 && selectedValue ? selectedValue.day : day;
+    hour = hour === 0 && selectedValue ? selectedValue.hour : hour;
+    min = min === 0 && selectedValue ? selectedValue.min : min;
 
     const today: IMyDate = this.getToday();
     if (year === 0 && (month !== 0 || day !== 0)) {
@@ -172,6 +173,12 @@ export class UtilService {
         da.push({value: ds[i], format: df[i]});
       }
       if (df[i].indexOf(D) !== -1) {
+        da.push({value: ds[i], format: df[i]});
+      }
+      if (df[i].indexOf(HH) !== -1) {
+        da.push({value: ds[i], format: df[i]});
+      }
+      if (df[i].indexOf(SS) !== -1) {
         da.push({value: ds[i], format: df[i]});
       }
     }
@@ -481,6 +488,12 @@ export class UtilService {
     }
     else {
       formatted = formatted.replace(D, String(date.day));
+    }
+    if (dateFormat.indexOf(HH) !== -1) {
+      formatted = formatted.replace(HH, this.preZero(date.hour));
+    }
+    if (dateFormat.indexOf(SS) !== -1) {
+      formatted = formatted.replace(SS, this.preZero(date.min));
     }
     return formatted;
   }

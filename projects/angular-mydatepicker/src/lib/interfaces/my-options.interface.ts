@@ -65,6 +65,7 @@ export interface IMyOptions {
   ariaLabelNextMonth?: string;
   showResetButton?: boolean;
   resetButtonText?: string;
+  showTimeSelector?: boolean;
 }
 
 export interface IAngularMyDpOptions extends IMyOptions { }
